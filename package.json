@@ -1,0 +1,17 @@
+{
+  "name": "imager-resizer-and-change-type",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "author": "https://github.com/tspuujee",
+  "license": "ISC",
+  "scripts": {
+    "lint": "eslint --ignore-path .eslintignore .",
+    "test": "sls invoke test",
+    "deploy": "rm -rf node_modules && yarn install --production && sls deploy && yarn",
+    "start": "sls offline start"
+  },
+  "dependencies": {
+    "sharp": "^0.28.3"
+  }
+}

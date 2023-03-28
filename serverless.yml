@@ -1,0 +1,43 @@
+org: your-serverless-org
+app: your-serverless-app
+service: image-resizer
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  apiGateway:
+    shouldStartNameWithService: true
+  stage: ${opt:stage, 'prod'}
+  region: ap-southeast-1
+  environment:
+    CLOUD_FRONT_URL: https://image.example.com/
+    CLOUD_FRONT_URL_WITH_DOMAIN: https://example.cloudfront.net/
+    INVENTORY_BUCKET: your-bucket-name
+functions:
+  main:
+    handler: handler.resizeAndChangeType
+    events:
+      - http:
+          path: resizeAndChangeType
+          method: any
+          cors:
+            origins:
+              - https://*.example.com
+              - http://localhost:8080
+            headers: "*"
+    iamRoleStatementsName: imageResizerS3
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:GetObject"
+        Resource: arn:aws:s3:::your-bucket-names/*
+      - Effect: "Allow"
+        Action:
+          - "s3:GetObject"
+          - "s3:PutObject"
+        Resource: arn:aws:s3:::your-bucket-name/*
+plugins:
+  - serverless-offline
+  - serverless-iam-roles-per-function
+useDotenv: true
